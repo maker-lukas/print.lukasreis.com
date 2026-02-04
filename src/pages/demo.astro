@@ -1,0 +1,98 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Demo - print.lukasreis.com">
+  <div class="demo-page">
+    <p class="notice">This page is not part of the project</p>
+
+    <h1>Demo</h1>
+    <p class="subtitle">Watch the printer receive a message in real time.</p>
+
+    <video controls>
+      <source src="/DEMO.mp4" type="video/mp4" />
+      Your browser doesn't support video playback.
+    </video>
+
+    <div class="try-section">
+      <h2>Try the actual website</h2>
+      <p>Send a message and it will print on my home printer.</p>
+      
+      <ul class="guidelines">
+        <li>Keep it friendly</li>
+        <li>Dont spam or be toxic</li>
+      </ul>
+
+      <a href="/" class="btn">Go to print.lukasreis.com</a>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .demo-page {
+    min-height: 100vh;
+    padding-block: 80px;
+    padding-inline: max(calc((100% - 560px) / 2), 20px);
+  }
+
+  .notice {
+    color: #888;
+    font-size: 0.85rem;
+    margin-bottom: 24px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    color: #aaa;
+    margin-bottom: 32px;
+  }
+
+  video {
+    width: 560px;
+    max-width: 100%;
+    background: #000;
+    margin-bottom: 32px;
+  }
+
+  .try-section h2 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+
+  .try-section > p {
+    color: #aaa;
+    margin-bottom: 16px;
+  }
+
+  .guidelines {
+    list-style: none;
+    color: #888;
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+
+  .guidelines li {
+    padding: 4px 0;
+  }
+
+  .guidelines li::before {
+    content: "– ";
+  }
+
+  .btn {
+    display: inline-block;
+    background: #42414d;
+    color: #fff;
+    padding: 10px 16px;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  .btn:hover {
+    background: #52515d;
+  }
+</style>
