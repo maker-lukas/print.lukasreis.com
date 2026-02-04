@@ -16,6 +16,8 @@ export const GET: APIRoute = async ({ locals }) => {
   });
 };
 
+const RATE_LIMIT_MINUTES = 5;
+
 export const POST: APIRoute = async ({ request, locals }) => {
   const db = locals.runtime?.env?.DB;
   if (!db) {
@@ -26,6 +28,21 @@ export const POST: APIRoute = async ({ request, locals }) => {
   const ip = request.headers.get('cf-connecting-ip') 
     || request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
     || 'unknown';
+
+  const recentMessage = await db.prepare(
+    `SELECT created_at FROM messages 
+     WHERE ip_address = ? AND created_at > datetime('now', ?)
+     LIMIT 1`
+  ).bind(ip, `-${RATE_LIMIT_MINUTES} minutes`).first();
+
+  if (recentMessage) {
+    return new Response(JSON.stringify({ 
+      error: `Please wait ${RATE_LIMIT_MINUTES} minutes between messages` 
+    }), { 
+      status: 429,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
 
   const { name, message } = await request.json() as { name?: string; message?: string };
   if (!message) {
