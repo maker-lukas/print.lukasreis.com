@@ -467,26 +467,27 @@ import Layout from "../layouts/Layout.astro";
 
 </style>
 
-<script is:inline>
-  const form = document.getElementById('message-form');
-  const status = document.getElementById('status');
+<script>
+  function initPage() {
+    const form = document.getElementById('message-form') as HTMLFormElement;
+    const status = document.getElementById('status')!;
 
-  const formPage = document.getElementById('form-page');
-  const messagePage = document.getElementById('message-page');
-  const pageIndicator = document.getElementById('page-indicator');
-  const paperPageInfo = document.getElementById('paper-page-info');
-  const sheetCount = document.querySelector('.sheet-count');
-  
-  const navFirst = document.getElementById('nav-first');
-  const navPrev = document.getElementById('nav-prev');
-  const navNext = document.getElementById('nav-next');
-  const navLast = document.getElementById('nav-last');
-  
-  const messagesContainer = document.getElementById('messages-container');
+    const formPage = document.getElementById('form-page')!;
+    const messagePage = document.getElementById('message-page')!;
+    const pageIndicator = document.getElementById('page-indicator')!;
+    const paperPageInfo = document.getElementById('paper-page-info')!;
+    const sheetCount = document.querySelector('.sheet-count')!;
+    
+    const navFirst = document.getElementById('nav-first')!;
+    const navPrev = document.getElementById('nav-prev')!;
+    const navNext = document.getElementById('nav-next')!;
+    const navLast = document.getElementById('nav-last')!;
+    
+    const messagesContainer = document.getElementById('messages-container')!;
 
-  let messages = [];
-  let currentPage = 0; // 0 = new message form, 1+ = individual messages
-  let totalPages = 1;
+    let messages: any[] = [];
+    let currentPage = 0;
+    let totalPages = 1;
 
   async function fetchMessages() {
     try {
@@ -518,13 +519,13 @@ import Layout from "../layouts/Layout.astro";
     navLast.toggleAttribute('disabled', currentPage >= totalPages - 1);
   }
 
-  function escapeHtml(text) {
+  function escapeHtml(text: string) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
   }
 
-  function showPage(page) {
+  function showPage(page: number) {
     currentPage = Math.max(0, Math.min(page, totalPages - 1));
     
     if (currentPage === 0) {
@@ -595,19 +596,19 @@ import Layout from "../layouts/Layout.astro";
     setTimeout(() => { status.textContent = ''; status.className = ''; }, 4000);
   });
 
-  document.querySelector('.btn-cancel').addEventListener('click', () => {
+  document.querySelector('.btn-cancel')!.addEventListener('click', () => {
     form.reset();
   });
 
-  const paper = document.querySelector('.paper');
-  const paperSizeSelect = document.getElementById('paper-size-select');
+  const paper = document.querySelector('.paper') as HTMLElement;
+  const paperSizeSelect = document.getElementById('paper-size-select') as HTMLSelectElement;
 
   paperSizeSelect.addEventListener('change', () => {
     paper.classList.toggle('letter', paperSizeSelect.value === 'letter');
   });
 
-  const textarea = document.getElementById('message');
-  const charCurrent = document.getElementById('char-current');
+  const textarea = document.getElementById('message') as HTMLTextAreaElement;
+  const charCurrent = document.getElementById('char-current')!;
 
   function updateCharCount() {
     charCurrent.textContent = textarea.value.length.toString();
@@ -615,5 +616,9 @@ import Layout from "../layouts/Layout.astro";
 
   textarea.addEventListener('input', updateCharCount);
   updateCharCount();
+  }
 
+  // Run on initial load and after View Transitions navigation
+  initPage();
+  document.addEventListener('astro:after-swap', initPage);
 </script>
