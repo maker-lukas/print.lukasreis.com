@@ -1,0 +1,7 @@
+name = "messages"
+compatibility_date = "2024-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "messages-db"
+database_id = "87627711-4b8a-4c4a-97bd-cf1e45e7c273"

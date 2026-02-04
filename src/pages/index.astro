@@ -1,17 +1,622 @@
 ---
-
+import Layout from "../layouts/Layout.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="lukas/print">
+  <div class="preview-area">
+    <div class="paper">
+      <div class="paper-header">
+        <span class="paper-title">Messages</span>
+        <span class="paper-url">print.lukasreis.com</span>
+      </div>
+      
+      <div class="paper-content" id="paper-content">
+        <div id="form-page">
+          <h1>Print a message</h1>
+          <p class="intro">Hey I'm Lukas! Want to leave a message? Write anything below and it will auto print on my home printer!</p>
+          
+          <form id="message-form">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Anonymous" maxlength="55"/>
+            
+            <div class="message-header">
+              <label for="message">Message</label>
+              <span class="char-count"><span id="char-current">0</span>/250</span>
+            </div>
+            <textarea 
+              id="message" 
+              name="message" 
+              placeholder="Type your message here"
+              rows="5"
+              maxlength="250"
+            ></textarea>
+          </form>
+          <div id="status"></div>
+        </div>
+        
+        <div id="message-page" style="display: none;">
+          <div id="messages-container" class="messages-container"></div>
+        </div>
+      </div>
+      
+      <div class="paper-footer">
+        <span class="page-info" id="paper-page-info">1 of 1</span>
+      </div>
+    </div>
+    
+    <div class="page-nav">
+      <button class="nav-btn" id="nav-first">«</button>
+      <button class="nav-btn" id="nav-prev">‹</button>
+      <span class="page-indicator" id="page-indicator">1 of 1</span>
+      <button class="nav-btn" id="nav-next">›</button>
+      <button class="nav-btn" id="nav-last">»</button>
+    </div>
+  </div>
+  
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2>Print</h2>
+      <span class="sheet-count">1 sheet of paper</span>
+    </div>
+    
+    <div class="setting-group">
+      <label class="setting-label">Destination</label>
+      <div class="destination">
+        <span>Brother_DCP-7030</span>
+      </div>
+    </div>
+    
+    <div class="setting-group">
+      <label class="setting-label">Paper size</label>
+      <select id="paper-size-select" class="native-select">
+        <option value="a4" selected>A4</option>
+        <option value="letter">Letter</option>
+      </select>
+    </div>
+    
+    <a href="/about" class="system-dialog-link">How this works <span class="external-icon">↗</span></a>
+
+    <a href="https://lukasreis.com" class="system-dialog-link">
+      Visit lukasreis.com
+      <span class="external-icon">↗</span>
+    </a>
+    
+    <div class="sidebar-bottom">
+      <p class="made-by">Made by Lukas with &lt;3</p>
+      <div class="sidebar-footer">
+        <button class="btn-cancel">Cancel</button>
+        <button class="btn-save" type="submit" form="message-form">Send</button>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .message-header {
+    display: flex;
+  }
+
+  .sidebar-bottom {
+    margin-top: auto;
+  }
+
+  .made-by {
+    padding: 8px 20px;
+    margin: 0 16px 16px;
+    text-align: center;
+  }
+
+  .preview-area {
+    flex: 1;
+    background: #5a5a5f;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  .paper {
+    background: #fff;
+    width: 100%;
+    max-width: 580px;
+    min-height: 820px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: max-width 0.2s, min-height 0.2s;
+  }
+
+  .paper.letter {
+    max-width: 612px;
+    min-height: 792px;
+  }
+
+  .paper-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 16px;
+    font-size: 11px;
+    color: #333;
+    border-bottom: 1px solid #eee;
+  }
+
+  .paper-title {
+    font-weight: 500;
+  }
+
+  .paper-url {
+    color: #666;
+  }
+
+  .paper-content {
+    flex: 1;
+    padding: 40px 50px;
+    color: #1a1a1a;
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  .paper-content h1 {
+    font-size: 1.3rem;
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+
+  .paper-content .intro {
+    font-size: 0.8rem;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 32px;
+  }
+
+  .paper-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .paper-content label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: -8px;
+  }
+
+  .paper-content input,
+  .paper-content textarea {
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 0.85rem;
+    background: #fafafa;
+  }
+
+  .paper-content input:focus,
+  .paper-content textarea:focus {
+    outline: none;
+    border-color: #0060df;
+    background: #fff;
+  }
+
+  .paper-content textarea {
+    resize: none;
+    min-height: 120px;
+  }
+
+  #status {
+    font-size: 0.8rem;
+    margin-top: 8px;
+  }
+
+  #status.success {
+    color: #058b00;
+  }
+
+  #status.error {
+    color: #d93025;
+  }
+
+  .char-count {
+    font-size: 0.7rem;
+    color: #888;
+    text-align: right;
+    margin-bottom: -8px;
+  }
+
+  #message-page {
+    height: 100%;
+  }
+
+  :global(.messages-container) {
+    height: 100%;
+  }
+
+  :global(.message-card) {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  :global(.message-header) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  :global(.message-from) {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  :global(.message-date) {
+    font-size: 0.7rem;
+    color: #888;
+  }
+
+  :global(.message-divider) {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 8px 0;
+  }
+
+  :global(.message-text) {
+    flex: 1;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    color: #1a1a1a;
+  }
+
+  .paper-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 16px;
+    font-size: 11px;
+    color: #333;
+    border-top: 1px solid #eee;
+  }
+
+  .page-nav {
+    position: absolute;
+    bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: #42414d;
+    border-radius: 4px;
+    padding: 4px;
+  }
+
+  .nav-btn {
+    background: transparent;
+    border: none;
+    color: #999;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    border-radius: 2px;
+    font-size: 14px;
+  }
+
+  .nav-btn:hover:not(:disabled) {
+    background: #5a5a5f;
+    color: #fff;
+  }
+
+  .page-indicator {
+    padding: 0 12px;
+    color: #ccc;
+    font-size: 12px;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    padding: 10px 18px 18px 18px;
+    width: 300px;
+    background: #2b2a33;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #3a3a44;
+    padding-bottom: 10px;
+    margin: 0 16px 18px;
+  }
+
+  .sidebar-header h2 {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .sheet-count {
+    font-size: 12px;
+    color: #999;
+  }
+
+  .setting-label {
+    display: block;
+    font-size: 12px;
+    color: #bbb;
+    margin-bottom: 8px;
+  }
+
+  .setting-group {
+    margin: 0 16px 18px;
+  }
+
+  .destination {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #42414d;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+
+  .system-dialog-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #8cb4ff;
+    width: fit-content;
+    margin: 3px 16px;
+  }
+
+  .system-dialog-link:hover {
+    text-decoration: underline;
+    color: #ADCAFF;
+  }
+
+  .external-icon {
+    font-size: 11px;
+    opacity: 0.7;
+  }
+
+  .sidebar-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    border-top: 1px solid #3a3a44;
+    padding-top: 18px;
+    margin: 0 16px;
+  }
+
+  .btn-cancel,
+  .btn-save {
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-cancel {
+    background: #42414d;
+    color: #fff;
+  }
+
+  .btn-cancel:hover {
+    background: #52515d;
+  }
+
+  .btn-save {
+    background: #00cadb;
+    color: #001f4d;
+  }
+
+  .btn-save:hover {
+    background: #61dce9;
+  }
+
+  @media (max-width: 800px) {
+    body {
+      flex-direction: column;
+    }
+    
+    .sidebar {
+      width: 100%;
+      min-height: auto;
+      order: -1;
+    }
+    
+    .preview-area {
+      min-height: 600px;
+    }
+    
+    .sidebar-footer {
+      position: sticky;
+      bottom: 0;
+      background: #2b2a33;
+    }
+  }
+
+  .dropdown-wrapper {
+    position: relative;
+  }
+
+  .native-select {
+  width: 100%;
+  background: #42414d;
+  color: white;
+  padding: 8px 12px;
+  font-size: 13px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 18px;
+}
+
+.native-select:focus {
+  outline: 2px solid #0060df;
+}
+
+
+</style>
+
+<script>
+  const form = document.getElementById('message-form') as HTMLFormElement;
+  const status = document.getElementById('status')!;
+
+  const formPage = document.getElementById('form-page')!;
+  const messagePage = document.getElementById('message-page')!;
+  const pageIndicator = document.getElementById('page-indicator')!;
+  const paperPageInfo = document.getElementById('paper-page-info')!;
+  const sheetCount = document.querySelector('.sheet-count')!;
+  
+  const navFirst = document.getElementById('nav-first')!;
+  const navPrev = document.getElementById('nav-prev')!;
+  const navNext = document.getElementById('nav-next')!;
+  const navLast = document.getElementById('nav-last')!;
+  
+  const messagesContainer = document.getElementById('messages-container')!;
+
+  let messages: any[] = [];
+  let currentPage = 0; // 0 = new message form, 1+ = individual messages
+  let totalPages = 1;
+
+  async function fetchMessages() {
+    try {
+      const res = await fetch('/api/messages');
+      if (res.ok) {
+        messages = await res.json();
+        totalPages = 1 + messages.length;
+        updateNav();
+        updateSheetCount();
+        if (currentPage > 0) showPage(currentPage);
+      }
+    } catch (e) {
+      console.error('Failed to fetch messages:', e);
+    }
+  }
+
+  function updateSheetCount() {
+    sheetCount.textContent = `${totalPages} sheet${totalPages === 1 ? '' : 's'} of paper`;
+  }
+
+  function updateNav() {
+    const displayPage = currentPage + 1;
+    pageIndicator.textContent = `${displayPage} of ${totalPages}`;
+    paperPageInfo.textContent = `${displayPage} of ${totalPages}`;
+    
+    navFirst.toggleAttribute('disabled', currentPage === 0);
+    navPrev.toggleAttribute('disabled', currentPage === 0);
+    navNext.toggleAttribute('disabled', currentPage >= totalPages - 1);
+    navLast.toggleAttribute('disabled', currentPage >= totalPages - 1);
+  }
+
+  function escapeHtml(text: string) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function showPage(page: number) {
+    currentPage = Math.max(0, Math.min(page, totalPages - 1));
+    
+    if (currentPage === 0) {
+      formPage.style.display = 'block';
+      messagePage.style.display = 'none';
+    } else {
+      const msg = messages[currentPage - 1];
+      formPage.style.display = 'none';
+      messagePage.style.display = 'block';
+      
+      messagesContainer.innerHTML = `
+        <div class="message-card">
+          <div class="message-header">
+            <span class="message-from">${escapeHtml(msg.name || 'Anonymous')}</span>
+            <span class="message-date">${new Date(msg.created_at).toLocaleDateString()}</span>
+          </div>
+          <hr class="message-divider" />
+          <div class="message-text">${escapeHtml(msg.message)}</div>
+        </div>
+      `;
+    }
+    
+    updateNav();
+  }
+
+  navFirst.addEventListener('click', () => showPage(0));
+  navPrev.addEventListener('click', () => showPage(currentPage - 1));
+  navNext.addEventListener('click', () => showPage(currentPage + 1));
+  navLast.addEventListener('click', () => showPage(totalPages - 1));
+
+  // Initialize
+  fetchMessages();
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const message = (formData.get('message') as string)?.trim();
+
+    if (!message) {
+      status.textContent = 'Please write a message first';
+      status.className = 'error';
+      setTimeout(() => { status.textContent = ''; status.className = ''; }, 3000);
+      return;
+    }
+
+    const res = await fetch('/api/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: formData.get('name'),
+        message: message,
+      }),
+    });
+
+    if (res.ok) {
+      status.textContent = 'Message sent to printer queue!';
+      status.className = 'success';
+      form.reset();
+      updateCharCount();
+      fetchMessages();
+    } else if (res.status === 429) {
+      status.textContent = 'Please wait 5 minutes between messages';
+      status.className = 'error';
+    } else {
+      status.textContent = 'Something went wrong, please try again';
+      status.className = 'error';
+    }
+    setTimeout(() => { status.textContent = ''; status.className = ''; }, 4000);
+  });
+
+  document.querySelector('.btn-cancel')!.addEventListener('click', () => {
+    form.reset();
+  });
+
+  const paper = document.querySelector('.paper')!;
+  const paperSizeSelect = document.getElementById('paper-size-select') as unknown as HTMLSelectElement;
+
+  paperSizeSelect.addEventListener('change', () => {
+    if (paperSizeSelect.value === 'letter') {
+      paper.classList.add('letter');
+    } else {
+      paper.classList.remove('letter');
+    }
+  })
+
+  const textarea = document.getElementById('message') as HTMLTextAreaElement;
+  const charCurrent = document.getElementById('char-current')!;
+
+  function updateCharCount() {
+    charCurrent.textContent = textarea.value.length.toString();
+  }
+
+  textarea.addEventListener('input', updateCharCount);
+  updateCharCount();
+
+</script>
