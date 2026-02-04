@@ -1,0 +1,215 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="print/about">
+  <div class="about-area">
+    <div class="paper old-paper" transition:name="paper">
+      <div class="tape"></div>
+      <div class="tape-2"></div>
+      <div class="paper-content">
+        <h1>How This Works</h1>
+        
+        <p class="section">
+          You write a message on <a href="/">print.lukasreis.com</a> and it gets 
+          sent directly to my home printer — a trusty Brother DCP-7030 sitting 
+          on my desk.
+        </p>
+
+        <h2>The Process</h2>
+        <ol>
+          <li>You type your message (up to 250 characters)</li>
+          <li>Hit "Send" and it goes into a queue</li>
+          <li>A Raspberry Pi at my place polls for new messages</li>
+          <li>Your message gets printed on real paper</li>
+          <li>I read it (eventually)</li>
+        </ol>
+
+        <h2>Some Rules</h2>
+        <ul>
+          <li>One message per 5 minutes (per IP)</li>
+          <li>Keep it friendly — I'm a real person</li>
+          <li>Messages are public and visible on the site</li>
+          <li>No promises I'll respond, but I do read them all</li>
+        </ul>
+
+        <h2>Why?</h2>
+        <p class="section">
+          I thought it would be fun. There's something nice about the idea of 
+          internet strangers being able to leave a physical note on my desk. 
+          It's like a guestbook, but nerdier.
+        </p>
+
+        <p class="section">
+          Also I wanted an excuse to use my printer more.
+        </p>
+
+        <div class="signature">
+          — Lukas
+        </div>
+      </div>
+    </div>
+
+    <a href="/" class="back-link">← Back to printing</a>
+  </div>
+</Layout>
+
+<style>
+  .about-area {
+    flex: 1;
+    background: #5a5a5f;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    min-height: 100vh;
+  }
+
+  .paper {
+    background: #fff;
+    width: 100%;
+    max-width: 580px;
+    min-height: 820px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .old-paper {
+    background: #fafafa;
+    transform: rotate(-1.5deg);
+    box-shadow: 
+      0 4px 16px rgba(0,0,0,0.3),
+      inset 0 0 30px rgba(0, 0, 0, 0.03);
+  }
+
+  /* Tape strip top right */
+  .tape {
+    position: absolute;
+    top: -8px;
+    right: 40px;
+    width: 80px;
+    height: 28px;
+    background: rgba(255, 252, 220, 0.7);
+    transform: rotate(5deg);
+    z-index: 10;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  .tape::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 4px,
+      rgba(0,0,0,0.02) 4px,
+      rgba(0,0,0,0.02) 5px
+    );
+  }
+
+  /* Second tape strip bottom */
+  .tape-2 {
+    position: absolute;
+    bottom: 30px;
+    left: -15px;
+    width: 70px;
+    height: 24px;
+    background: rgba(255, 252, 220, 0.65);
+    transform: rotate(-12deg);
+    z-index: 10;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  .paper-content {
+    flex: 1;
+    padding: 50px 55px;
+    color: #2a2520;
+    font-family: "JetBrains Mono", monospace;
+    position: relative;
+    z-index: 1;
+  }
+
+  .paper-content h1 {
+    font-size: 1.4rem;
+    margin-bottom: 28px;
+    font-weight: 600;
+    color: #1a1815;
+  }
+
+  .paper-content h2 {
+    font-size: 1rem;
+    margin-top: 28px;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #1a1815;
+  }
+
+  .paper-content p.section {
+    font-size: 0.82rem;
+    line-height: 1.7;
+    margin-bottom: 8px;
+  }
+
+  .paper-content ol,
+  .paper-content ul {
+    font-size: 0.82rem;
+    line-height: 1.8;
+    padding-left: 24px;
+    margin: 0;
+  }
+
+  .paper-content li {
+    margin-bottom: 4px;
+  }
+
+  .paper-content a {
+    color: #4a6fa5;
+    text-decoration: underline;
+  }
+
+  .paper-content a:hover {
+    color: #2c4a7a;
+  }
+
+  .signature {
+    margin-top: 40px;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: #4a4540;
+  }
+
+  .back-link {
+    margin-top: 24px;
+    color: #aaa;
+    font-size: 0.85rem;
+    text-decoration: none;
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  .back-link:hover {
+    color: #fff;
+    text-decoration: underline;
+  }
+
+  @media (max-width: 650px) {
+    .about-area {
+      padding: 20px;
+    }
+
+    .paper {
+      min-height: auto;
+    }
+
+    .old-paper {
+      transform: rotate(-0.8deg);
+    }
+
+    .paper-content {
+      padding: 35px 30px;
+    }
+  }
+</style>

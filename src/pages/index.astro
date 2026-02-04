@@ -2,9 +2,9 @@
 import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout title="lukas/print">
+<Layout title="print/home">
   <div class="preview-area">
-    <div class="paper">
+    <div class="paper" transition:name="paper">
       <div class="paper-header">
         <span class="paper-title">Messages</span>
         <span class="paper-url">print.lukasreis.com</span>
@@ -53,7 +53,7 @@ import Layout from "../layouts/Layout.astro";
     </div>
   </div>
   
-  <div class="sidebar">
+  <div class="sidebar" transition:animate="fade">
     <div class="sidebar-header">
       <h2>Print</h2>
       <span class="sheet-count">1 sheet of paper</span>
@@ -74,7 +74,7 @@ import Layout from "../layouts/Layout.astro";
       </select>
     </div>
     
-    <a href="/about" class="system-dialog-link">How this works <span class="external-icon">↗</span></a>
+    <a href="/about" class="system-dialog-link">How this works <span class="external-icon">?</span></a>
 
     <a href="https://lukasreis.com" class="system-dialog-link">
       Visit lukasreis.com
@@ -269,6 +269,7 @@ import Layout from "../layouts/Layout.astro";
     font-size: 0.85rem;
     line-height: 1.5;
     white-space: pre-wrap;
+    word-break: break-word;
     color: #1a1a1a;
   }
 
@@ -598,16 +599,12 @@ import Layout from "../layouts/Layout.astro";
     form.reset();
   });
 
-  const paper = document.querySelector('.paper')!;
+  const paper = document.querySelector('.paper') as HTMLElement;
   const paperSizeSelect = document.getElementById('paper-size-select') as unknown as HTMLSelectElement;
 
   paperSizeSelect.addEventListener('change', () => {
-    if (paperSizeSelect.value === 'letter') {
-      paper.classList.add('letter');
-    } else {
-      paper.classList.remove('letter');
-    }
-  })
+    paper.classList.toggle('letter', paperSizeSelect.value === 'letter');
+  });
 
   const textarea = document.getElementById('message') as HTMLTextAreaElement;
   const charCurrent = document.getElementById('char-current')!;

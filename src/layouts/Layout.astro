@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css"
+import { ViewTransitions } from "astro:transitions"
 const { title } = Astro.props
 ---
 
@@ -11,6 +12,7 @@ const { title } = Astro.props
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		<ViewTransitions />
 	</head>
 	<body>
         <main>
