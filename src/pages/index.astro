@@ -601,7 +601,7 @@ import Layout from "../layouts/Layout.astro";
   });
 
   const paper = document.querySelector('.paper') as HTMLElement;
-  const paperSizeSelect = document.getElementById('paper-size-select') as HTMLSelectElement;
+  const paperSizeSelect = document.getElementById('paper-size-select') as unknown as HTMLSelectElement;
 
   paperSizeSelect.addEventListener('change', () => {
     paper.classList.toggle('letter', paperSizeSelect.value === 'letter');
