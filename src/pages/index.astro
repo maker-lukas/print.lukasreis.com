@@ -468,6 +468,16 @@ import Layout from "../layouts/Layout.astro";
 </style>
 
 <script>
+  function normalizeNewlines(text: string): string {
+    // Collapse 2+ consecutive newlines to 1, then cap at 6 total
+    let normalized = text.replace(/\n{2,}/g, '\n');
+    const lines = normalized.split('\n');
+    if (lines.length > 7) {
+      normalized = lines.slice(0, 7).join('\n');
+    }
+    return normalized;
+  }
+
   function initPage() {
     const form = document.getElementById('message-form') as HTMLFormElement;
     const status = document.getElementById('status')!;
@@ -576,7 +586,7 @@ import Layout from "../layouts/Layout.astro";
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         name: formData.get('name'),
-        message: message,
+        message: normalizeNewlines(message),
       }),
     });
 
