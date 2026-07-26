@@ -2,7 +2,7 @@
 
 > A website where you can leave a small message and it will auto-print on my home printer!
 
-<img src="public/DEMO.gif" alt="Demo" width="100%">
+<img src=".github/assets/DEMO.gif" alt="Demo" width="100%">
 
 ---
 
