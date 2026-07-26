@@ -2,8 +2,6 @@
 
 A website where you can leave a small message and it will auto-print on my home printer!
 
-![test](https://print.lukasreis.com/DEMO.mp4)
-
 ---
 
 ## How This Works
