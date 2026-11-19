@@ -16,7 +16,7 @@ export const GET: APIRoute = async ({ locals }) => {
   });
 };
 
-const RATE_LIMIT_MINUTES = 5;
+const RATE_LIMIT_MINUTES = 60;
 
 export const POST: APIRoute = async ({ request, locals }) => {
   const db = locals.runtime?.env?.DB;
